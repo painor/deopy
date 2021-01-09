@@ -1,1 +1,1 @@
-from deopy import Deopy
+from .deopy import Deopy
