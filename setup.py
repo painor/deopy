@@ -7,7 +7,7 @@ with open("requirements.txt", encoding="utf-8") as r:
 
 setuptools.setup(
     name="deopy",
-    version="0.0.1",
+    version="0.0.2",
     author="painor",
     author_email="pi.oussama@gmail.com",
     description="A python library that helps you de-obfuscate/decrypt obfuscated python code",

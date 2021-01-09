@@ -9,7 +9,7 @@ A python library that helps you de-obfuscate/decrypt obfuscated python code
 This library uses a lot of exec to reverse the code which is also dangerous and can be easily exploited. Do not run it with code you don't trust. You are the only one responsible if something bad happens to your marchine.
 
 # How to install?
-You can either install the latest from source <br> `pip install git+https://github.com/painor/deopy3.git` <br> or from pip <br> `pip install deopy3`
+You can either install the latest from source <br> `pip install git+https://github.com/painor/deopy.git` <br> or from pip <br> `pip install deopy`
 
 ### How to use
 Deopy offers a lot of different deobfuscation techniques and can even detect them. 
