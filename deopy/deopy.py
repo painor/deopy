@@ -20,6 +20,7 @@ class Algorithms(Enum):
     BYTE_ESCAPE = 5
     ROT13 = 6
     GITHUB_LINK = 7
+    B16 = 8
 
 
 class Deopy:
@@ -27,6 +28,7 @@ class Deopy:
 
         self.trust_regex = re.compile(r"eval\(compile\(base64.b64decode\(eval\('(.*)'\)\),'<string>','exec'\)\)")
         self.b64compile_regex = re.compile(r'g=compile\([d|r],"","exec"\)\nexec\(g\)')
+        self.b16compile_regex = re.compile(r"exec\(compile\((data\(b\.b16decode\)), '<string>', 'exec'\)\)")
         self.zlib_regex = re.compile(r'exec\(zlib\.decompress')
         self.execx_regex = re.compile(r'exec\(x\)')
         self.execmand_regex = re.compile(r'exec\(mand\)')
@@ -40,11 +42,13 @@ class Deopy:
             Algorithms.NONE: self.no_decrypt,
             Algorithms.ZLIB: self.decrypt_zlib,
             Algorithms.B64: self.decrypt_b64compile,
+            Algorithms.B16: self.decrypt_b16,
             Algorithms.TRUST: self.decrypt_trust,
             Algorithms.BYTE_ESCAPE: self.decrypt_bytes_escape,
             Algorithms.ROT13: self.decrypt_rot13,
             Algorithms.GITHUB_LINK: self.decrypt_github,
-            Algorithms.MARSHAL: self.decrypt_marshal
+            Algorithms.MARSHAL: self.decrypt_marshal,
+
         }
 
     def detect_algorithm(self, data: str) -> Algorithms:
@@ -62,6 +66,8 @@ class Deopy:
             return Algorithms.GITHUB_LINK
         elif self.marshal_loads_regex_1.search(data) or self.marshal_loads_regex_2.search(data):
             return Algorithms.MARSHAL
+        elif self.b16compile_regex.search(data):
+            return Algorithms.B16
         return Algorithms.NONE
 
     def auto_decrypt(self, data):
@@ -108,6 +114,12 @@ class Deopy:
         context = {}
         exec(self.execx_regex.sub("context['result'] = x", data))
         return context['result']
+
+    def decrypt_b16(self, data: str) -> str:
+        msg = self.b16compile_regex.search(data)
+        context = {}
+        exec(self.b16compile_regex.sub("context['result'] = {}".format(msg.group(1)), data))
+        return context['result'].decode("utf-8")
 
     def decrypt_trust(self, data: str) -> str:
         msg = self.trust_regex.search(data)
