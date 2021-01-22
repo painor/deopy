@@ -93,9 +93,9 @@ class Deopy:
 
     def decrypt_marshal(self, data: str) -> str:
         if self.marshal_loads_regex_1.search(data):
-            data = re.search(r"exec\(marshal\.loads\(b'(.*)'\)\)", data).group(1)
+            data = re.search(r"exec\(marshal\.loads\(b'([\S|\s]*)'\)\)", data).group(1)
         elif self.marshal_loads_regex_2.search(data):
-            data = re.search(r"m\.loads\(b'(.*)'\)", data).group(1)
+            data = re.search(r"m\.loads\(b'([\S|\s]*)'\)", data).group(1)
         try:
             # this sometimes fails and I don't know why
             data = ast.literal_eval("b'" + data + "'")
